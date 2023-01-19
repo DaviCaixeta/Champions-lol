@@ -9,10 +9,17 @@
           class="searchName-input"
           placeholder="BUSCAR"
         />
-        <button @click="clearName()" class="delete-button">X</button>
+        <button v-if="filter !== ''" @click="clearName()" class="delete-button">
+          X
+        </button>
       </div>
       <div class="container-tags">
-        <button value="todos" type="button" @click="allChampions('all')">
+        <button
+          value="todos"
+          type="button"
+          class="buttons-tags"
+          @click="allChampions('all')"
+        >
           TODOS
         </button>
         <button
@@ -64,19 +71,27 @@
           TANQUES
         </button>
       </div>
-      <div class="select-difficulty">
+      <div class="container-select">
         <select
           name="difficulty"
           id="difficulty"
+          class="select-difficulty"
           @change="setDifficulty($event)"
         >
-          <option value="" selected disabled hidden>
+          <option value="" selected disabled hidden v-if="difficulty === ''">
             TODAS AS DIFICULDADES
           </option>
           <option value="easy">FÁCIL</option>
           <option value="medium">MÉDIO</option>
           <option value="hard">DIFÍCIL</option>
         </select>
+        <button
+          v-if="difficulty !== ''"
+          @click="clearSelect()"
+          class="delete-button"
+        >
+          X
+        </button>
       </div>
     </div>
     <div class="heroes-list">
@@ -116,10 +131,6 @@ export default {
         console.log(error);
       }
     },
-    clearName() {
-      this.filter = "";
-      this.tag = "all";
-    },
     allChampions(value) {
       this.tag = value;
       console.log(this.tag);
@@ -127,10 +138,18 @@ export default {
     setDifficulty(event) {
       this.difficulty = event.target.value;
     },
+    clearName() {
+      this.filter = "";
+      // this.tag = "all";
+    },
+    clearSelect() {
+      this.difficulty = "";
+    },
   },
   computed: {
     displayChampions() {
       const champions = Object.values(this.heroes);
+      console.log(champions);
       const search = this.filter.toLowerCase();
       const filterBySearch = (champion) => {
         const x = champion.name.toLowerCase().includes(search);
@@ -144,9 +163,38 @@ export default {
           return y;
         }
       };
-      const z = champions.filter(filterBySearch).filter(filterByTag);
-      console.log(z);
-      return champions.filter(filterBySearch).filter(filterByTag);
+      const filterByDifficulty = (champion) => {
+        if (this.difficulty === "easy") {
+          if (champion.info.difficulty <= 3) {
+            const z = true;
+            return z;
+          } else {
+            return;
+          }
+        } else if (this.difficulty === "medium") {
+          if (champion.info.difficulty >= 4 && champion.info.difficulty <= 7) {
+            const z = true;
+            return z;
+          } else {
+            return;
+          }
+        } else if (this.difficulty === "hard") {
+          if (champion.info.difficulty > 7) {
+            const z = true;
+            return z;
+          } else {
+            return;
+          }
+        } else {
+          return champion;
+        }
+      };
+      const a = champions
+        .filter(filterBySearch)
+        .filter(filterByTag)
+        .filter(filterByDifficulty);
+      console.log(a);
+      return a;
     },
   },
 };
@@ -157,18 +205,22 @@ export default {
   display: flex;
   margin-left: 20px;
   margin-bottom: 50px;
+  border: 4px solid rgba(0, 0, 0, 0.7);
+  padding: 5px;
 }
 .container-name {
-  border: 2px solid #000000;
   padding: 5px;
 }
 .searchName-input {
   border: none;
+  height: 30px;
+  margin-right: 5px;
 }
 .delete-button {
   background-color: red;
   font-weight: bold;
   cursor: pointer;
+  height: 20px;
 }
 .heroes-list {
   display: flex;
@@ -182,8 +234,25 @@ export default {
 .container-tags {
   display: flex;
   margin: 0px 20px;
+  padding: 0 20px;
+  border-right: 4px solid rgba(0, 0, 0, 0.6);
+  border-left: 4px solid rgba(0, 0, 0, 0.6);
 }
 .buttons-tags {
   margin-left: 15px;
+  cursor: pointer;
+  border: none;
+}
+.container-select {
+  display: flex;
+  align-items: center;
+}
+.select-difficulty {
+  border: none;
+  vertical-align: bottom;
+  cursor: pointer;
+  width: 200px;
+  height: 40px;
+  margin-right: 5px;
 }
 </style>
