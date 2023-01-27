@@ -1,102 +1,23 @@
 <template>
   <div>
     <div class="search">
-      <div class="container-name">
-        <input
-          v-model="filter"
-          id="filter-name"
-          type="text"
-          class="searchName-input"
-          placeholder="BUSCAR"
-        />
-        <button v-if="filter !== ''" @click="clearName()" class="delete-button">
-          X
-        </button>
-      </div>
-      <div class="container-tags">
-        <button
-          value="todos"
-          type="button"
-          class="buttons-tags"
-          @click="allChampions('all')"
-        >
-          TODOS
-        </button>
-        <button
-          value="assassinos"
-          type="button"
-          class="buttons-tags"
-          @click="allChampions('Assassin')"
-        >
-          ASSASSINOS
-        </button>
-        <button
-          value="lutadores"
-          type="button"
-          class="buttons-tags"
-          @click="allChampions('Fighter')"
-        >
-          LUTADORES
-        </button>
-        <button
-          value="magos"
-          type="button"
-          class="buttons-tags"
-          @click="allChampions('Mage')"
-        >
-          MAGOS
-        </button>
-        <button
-          value="atiradores"
-          type="button"
-          class="buttons-tags"
-          @click="allChampions('Marksman')"
-        >
-          ATIRADORES
-        </button>
-        <button
-          value="suportes"
-          type="button"
-          class="buttons-tags"
-          @click="allChampions('Support')"
-        >
-          SUPORTES
-        </button>
-        <button
-          value="tanques"
-          type="button"
-          class="buttons-tags"
-          @click="allChampions('Tank')"
-        >
-          TANQUES
-        </button>
-      </div>
-      <div class="container-select">
-        <select
-          name="difficulty"
-          id="difficulty"
-          class="select-difficulty"
-          @change="setDifficulty($event)"
-        >
-          <option value="" selected disabled hidden v-if="difficulty === ''">
-            TODAS AS DIFICULDADES
-          </option>
-          <option value="easy">FÁCIL</option>
-          <option value="medium">MÉDIO</option>
-          <option value="hard">DIFÍCIL</option>
-        </select>
-        <button
-          v-if="difficulty !== ''"
-          @click="clearSelect()"
-          class="delete-button"
-        >
-          X
-        </button>
-      </div>
+      <NameFilter v-model="filter" />
+      <TagFilter @tagButton="tagFilter" />
+      <DifficultyFilter
+        v-model="difficulty"
+        @difficulty-clear="difficulty = ''"
+      />
     </div>
     <div class="heroes-list">
-      <div class="heroe" v-for="heroe in displayChampions" :key="heroe.name">
-        <p>{{ heroe.name }}</p>
+      <div
+        v-for="champion in displayChampions"
+        :key="champion.name"
+        class="heroe"
+      >
+        <router-link :to="'champions/' + champion.id">
+          <p class="championsNames">{{ champion.name }}</p>
+          <img :src="url + champion.id + urlEnd" class="championsImages" />
+        </router-link>
       </div>
     </div>
   </div>
@@ -104,16 +25,27 @@
 
 <script>
 import axios from "axios";
+import NameFilter from "@/components/NameFilter.vue";
+import TagFilter from "@/components/TagFilter.vue";
+import DifficultyFilter from "@/components/DifficultyFilter.vue";
 
 export default {
   name: "HomeView",
+  components: {
+    NameFilter,
+    TagFilter,
+    DifficultyFilter,
+  },
 
   data() {
     return {
       heroes: [],
+      heroesName: [],
       filter: "",
       tag: "all",
       difficulty: "",
+      url: "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/",
+      urlEnd: "_0.jpg",
     };
   },
   mounted() {
@@ -126,35 +58,31 @@ export default {
           "http://ddragon.leagueoflegends.com/cdn/12.23.1/data/en_US/champion.json"
         );
         this.heroes = response.data.data;
-        console.log(this.heroes);
+        this.getNames();
       } catch (error) {
         console.log(error);
       }
     },
-    allChampions(value) {
-      this.tag = value;
-      console.log(this.tag);
+    tagFilter(tag) {
+      this.tag = tag;
     },
-    setDifficulty(event) {
-      this.difficulty = event.target.value;
+    difficultyFilter(difficulty) {
+      this.difficulty = difficulty;
     },
-    clearName() {
-      this.filter = "";
-      // this.tag = "all";
-    },
-    clearSelect() {
-      this.difficulty = "";
+    getNames() {
+      let heroes = Object.values(this.heroes);
+      heroes.forEach((heroe, index) => {
+        this.heroesName[index] = heroe.id;
+      });
+      console.log(this.heroesName);
     },
   },
   computed: {
     displayChampions() {
       const champions = Object.values(this.heroes);
-      console.log(champions);
       const search = this.filter.toLowerCase();
-      const filterBySearch = (champion) => {
-        const x = champion.name.toLowerCase().includes(search);
-        return x;
-      };
+      const filterBySearch = (champion) =>
+        champion.name.toLowerCase().includes(search);
       const filterByTag = (champion) => {
         if (this.tag === "all") {
           return champion;
@@ -189,12 +117,12 @@ export default {
           return champion;
         }
       };
-      const a = champions
+      const all = champions
         .filter(filterBySearch)
         .filter(filterByTag)
         .filter(filterByDifficulty);
-      console.log(a);
-      return a;
+      console.log(all);
+      return all;
     },
   },
 };
@@ -208,51 +136,23 @@ export default {
   border: 4px solid rgba(0, 0, 0, 0.7);
   padding: 5px;
 }
-.container-name {
-  padding: 5px;
-}
-.searchName-input {
-  border: none;
-  height: 30px;
-  margin-right: 5px;
-}
-.delete-button {
-  background-color: red;
-  font-weight: bold;
-  cursor: pointer;
-  height: 20px;
-}
 .heroes-list {
   display: flex;
   flex-wrap: wrap;
-  width: 100%;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 .heroe {
-  margin: 0 20px;
+  width: 250px;
+  height: 350px;
+  margin-right: 20px;
+  margin-bottom: 20px;
 }
-.container-tags {
-  display: flex;
-  margin: 0px 20px;
-  padding: 0 20px;
-  border-right: 4px solid rgba(0, 0, 0, 0.6);
-  border-left: 4px solid rgba(0, 0, 0, 0.6);
+.championsImages {
+  width: 250px;
+  height: 300px;
 }
-.buttons-tags {
-  margin-left: 15px;
+.championsImages,
+.championsNames {
   cursor: pointer;
-  border: none;
-}
-.container-select {
-  display: flex;
-  align-items: center;
-}
-.select-difficulty {
-  border: none;
-  vertical-align: bottom;
-  cursor: pointer;
-  width: 200px;
-  height: 40px;
-  margin-right: 5px;
 }
 </style>
