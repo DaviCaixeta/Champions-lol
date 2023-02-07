@@ -6,20 +6,14 @@
         id="difficulty"
         class="select-difficulty"
         :value="difficulty"
-        @input="$emit('input', $event.target.value)"
+        @change="$emit('input', $event.target.value)"
       >
-        <option value="" selected disabled hidden v-if="difficulty === ''">
-          TODAS AS DIFICULDADES
-        </option>
+        <option value="" selected disabled hidden>TODAS AS DIFICULDADES</option>
         <option value="easy">FÁCIL</option>
         <option value="medium">MÉDIO</option>
         <option value="hard">DIFÍCIL</option>
       </select>
-      <button
-        v-if="difficulty !== ''"
-        @click="$emit('difficulty-clear')"
-        class="delete-button"
-      >
+      <button @click="$emit('difficulty-clear')" class="delete-button">
         X
       </button>
     </div>

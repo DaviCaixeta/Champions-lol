@@ -2,7 +2,7 @@
   <div>
     <div class="search">
       <NameFilter v-model="filter" />
-      <TagFilter @tagButton="tagFilter" />
+      <TagFilter v-model="tag" />
       <DifficultyFilter
         v-model="difficulty"
         @difficulty-clear="difficulty = ''"
@@ -15,8 +15,8 @@
         class="heroe"
       >
         <router-link :to="'champions/' + champion.id">
+          <img :src="getUrl(champion.id)" class="championsImages" />
           <p class="championsNames">{{ champion.name }}</p>
-          <img :src="url + champion.id + urlEnd" class="championsImages" />
         </router-link>
       </div>
     </div>
@@ -40,12 +40,9 @@ export default {
   data() {
     return {
       heroes: [],
-      heroesName: [],
       filter: "",
       tag: "all",
       difficulty: "",
-      url: "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/",
-      urlEnd: "_0.jpg",
     };
   },
   mounted() {
@@ -58,23 +55,15 @@ export default {
           "http://ddragon.leagueoflegends.com/cdn/12.23.1/data/en_US/champion.json"
         );
         this.heroes = response.data.data;
-        this.getNames();
       } catch (error) {
         console.log(error);
       }
     },
-    tagFilter(tag) {
-      this.tag = tag;
-    },
-    difficultyFilter(difficulty) {
-      this.difficulty = difficulty;
-    },
-    getNames() {
-      let heroes = Object.values(this.heroes);
-      heroes.forEach((heroe, index) => {
-        this.heroesName[index] = heroe.id;
-      });
-      console.log(this.heroesName);
+    getUrl(id) {
+      const url =
+        "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/";
+      const urlEnd = "_0.jpg";
+      return url + id + urlEnd;
     },
   },
   computed: {
@@ -153,6 +142,15 @@ export default {
 }
 .championsImages,
 .championsNames {
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 4px;
+  background-color: lightgray;
+}
+.button {
+  background-color: black;
+  color: white;
   cursor: pointer;
 }
 </style>

@@ -1,81 +1,40 @@
 <template>
   <div>
     <div class="container-tags">
-      <button
-        value="todos"
-        type="button"
-        class="buttons-tags"
-        @click="allChampions('all')"
-      >
+      <ButtonTags :value="tag" @click.native="$emit('input', 'all')">
         TODOS
-      </button>
-      <button
-        value="assassinos"
-        type="button"
-        class="buttons-tags"
-        @click="allChampions('Assassin')"
-      >
+      </ButtonTags>
+      <ButtonTags :value="tag" @click.native="$emit('input', 'Assassin')">
         ASSASSINOS
-      </button>
-      <button
-        value="lutadores"
-        type="button"
-        class="buttons-tags"
-        @click="allChampions('Fighter')"
-      >
+      </ButtonTags>
+      <ButtonTags :value="tag" @click.native="$emit('input', 'Fighter')">
         LUTADORES
-      </button>
-      <button
-        value="magos"
-        type="button"
-        class="buttons-tags"
-        @click="allChampions('Mage')"
-      >
+      </ButtonTags>
+      <ButtonTags :value="tag" @click.native="$emit('input', 'Mage')">
         MAGOS
-      </button>
-      <button
-        value="atiradores"
-        type="button"
-        class="buttons-tags"
-        @click="allChampions('Marksman')"
-      >
+      </ButtonTags>
+      <ButtonTags :value="tag" @click.native="$emit('input', 'Marksman')">
         ATIRADORES
-      </button>
-      <button
-        value="suportes"
-        type="button"
-        class="buttons-tags"
-        @click="allChampions('Support')"
-      >
+      </ButtonTags>
+      <ButtonTags :value="tag" @click.native="$emit('input', 'Support')">
         SUPORTES
-      </button>
-      <button
-        value="tanques"
-        type="button"
-        class="buttons-tags"
-        @click="allChampions('Tank')"
-      >
+      </ButtonTags>
+      <ButtonTags :value="tag" @click.native="$emit('input', 'Tank')">
         TANQUES
-      </button>
+      </ButtonTags>
     </div>
   </div>
 </template>
 
 <script>
+import ButtonTags from "./ButtonTags.vue";
 export default {
   name: "TagFilter",
+  components: {
+    ButtonTags,
+  },
 
-  data() {
-    return {
-      tag: "",
-    };
-  },
-  methods: {
-    allChampions(value) {
-      this.tag = value;
-      this.$emit("tagButton", this.tag);
-    },
-  },
+  props: ["tag"],
 };
 </script>
 
@@ -87,12 +46,6 @@ export default {
   border-right: 4px solid rgba(0, 0, 0, 0.6);
   border-left: 4px solid rgba(0, 0, 0, 0.6);
   height: 40px;
-}
-.buttons-tags {
-  margin-left: 15px;
-  cursor: pointer;
-  border: none;
-  border-radius: 4px;
 }
 .buttons-tags:focus {
   background-color: green;
