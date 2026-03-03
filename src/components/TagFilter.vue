@@ -1,41 +1,56 @@
 <template>
   <div>
     <div class="container-tags">
-      <ButtonTags :value="tag" @click.native="$emit('input', 'all')">
+      <ButtonTags
+        :value="modelValue"
+        @click="$emit('update:modelValue', 'all')"
+      >
         TODOS
       </ButtonTags>
-      <ButtonTags :value="tag" @click.native="$emit('input', 'Assassin')">
+      <ButtonTags
+        :value="modelValue"
+        @click="$emit('update:modelValue', 'Assassin')"
+      >
         ASSASSINOS
       </ButtonTags>
-      <ButtonTags :value="tag" @click.native="$emit('input', 'Fighter')">
+      <ButtonTags
+        :value="modelValue"
+        @click="$emit('update:modelValue', 'Fighter')"
+      >
         LUTADORES
       </ButtonTags>
-      <ButtonTags :value="tag" @click.native="$emit('input', 'Mage')">
+      <ButtonTags
+        :value="modelValue"
+        @click="$emit('update:modelValue', 'Mage')"
+      >
         MAGOS
       </ButtonTags>
-      <ButtonTags :value="tag" @click.native="$emit('input', 'Marksman')">
+      <ButtonTags
+        :value="modelValue"
+        @click="$emit('update:modelValue', 'Marksman')"
+      >
         ATIRADORES
       </ButtonTags>
-      <ButtonTags :value="tag" @click.native="$emit('input', 'Support')">
+      <ButtonTags
+        :value="modelValue"
+        @click="$emit('update:modelValue', 'Support')"
+      >
         SUPORTES
       </ButtonTags>
-      <ButtonTags :value="tag" @click.native="$emit('input', 'Tank')">
+      <ButtonTags
+        :value="modelValue"
+        @click="$emit('update:modelValue', 'Tank')"
+      >
         TANQUES
       </ButtonTags>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import ButtonTags from "./ButtonTags.vue";
-export default {
-  name: "TagFilter",
-  components: {
-    ButtonTags,
-  },
 
-  props: ["tag"],
-};
+defineProps(["modelValue"]);
 </script>
 
 <style scoped>
@@ -49,5 +64,6 @@ export default {
 }
 .buttons-tags:focus {
   background-color: green;
+  padding: 0 10px;
 }
 </style>

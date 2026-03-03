@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="w-full">
     <div class="container-select">
       <select
         name="difficulty"
         id="difficulty"
         class="select-difficulty"
-        :value="difficulty"
-        @change="$emit('input', $event.target.value)"
+        :value="modelValue"
+        @change="$emit('update:modelValue', $event.target.value)"
       >
         <option value="" selected disabled hidden>TODAS AS DIFICULDADES</option>
         <option value="easy">FÁCIL</option>
@@ -19,12 +19,8 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  name: "DifficultyFilter",
-
-  props: ["difficulty"],
-};
+<script setup>
+defineProps(["modelValue"]);
 </script>
 <style scoped>
 .container-select {
@@ -35,14 +31,14 @@ export default {
   border: none;
   vertical-align: bottom;
   cursor: pointer;
-  width: 200px;
+  width: 100%;
   height: 40px;
-  margin-right: 5px;
+  margin-right: 15px;
 }
 .delete-button {
   background-color: red;
   font-weight: bold;
   cursor: pointer;
-  height: 20px;
+  padding: 5px 10px;
 }
 </style>

@@ -3,11 +3,7 @@
     <slot></slot>
   </button>
 </template>
-<script>
-export default {
-  name: "ButtonTags",
-};
-</script>
+<script setup></script>
 <style scoped>
 .buttons-tags {
   margin-left: 15px;

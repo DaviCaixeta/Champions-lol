@@ -2,31 +2,29 @@
   <div>
     <div class="container-name">
       <input
-        :value="filter"
-        @input="$emit('input', $event.target.value)"
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
         id="filter-name"
         type="text"
-        class="searchName-input"
+        class="search-name-input"
         placeholder="BUSCAR"
       />
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: "NameFilter",
-  props: ["filter"],
-};
+<script setup>
+defineProps(["modelValue"]);
 </script>
 
 <style scoped>
 .container-name {
   padding: 5px;
 }
-.searchName-input {
+.search-name-input {
   border: none;
   height: 30px;
   margin-right: 5px;
+  padding: 10px;
 }
 </style>

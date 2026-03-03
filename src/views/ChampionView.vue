@@ -1,61 +1,59 @@
+<script setup>
+import { ref, onMounted, getCurrentInstance } from "vue";
+import axios from "axios";
+
+const championSelected = ref({});
+
+const getUrl = (id) => {
+  const url = "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/";
+  const urlEnd = "_0.jpg";
+  return url + id + urlEnd;
+};
+
+const getChampion = async (id) => {
+  try {
+    const response = await axios.get(
+      `http://ddragon.leagueoflegends.com/cdn/12.23.1/data/en_US/champion/${id}.json`
+    );
+    championSelected.value = response.data.data[id];
+    console.log(championSelected.value);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+onMounted(() => {
+  const route = getCurrentInstance()?.proxy.$route;
+  if (route && route.params.id) {
+    getChampion(route.params.id);
+  }
+});
+</script>
+
 <template>
-  <div class="champion">
+  <div class="champion flex flex-col items-center gap-10">
     <h1>{{ championSelected.name }}</h1>
-    <img :src="getUrl(this.$route.params.id)" class="championImage" />
+    <img :src="getUrl($route.params.id)" class="champion-image" />
     <h3>HABILIDADES</h3>
-    <div class="allSpells">
+    <div class="all-spells">
       <div v-for="attributes in championSelected.spells" :key="attributes.id">
-        <p class="eachSpell">{{ attributes.name }}</p>
+        <p class="each-spell">{{ attributes.name }}</p>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import axios from "axios";
-export default {
-  name: "ChampionView",
-
-  data() {
-    return {
-      championSelected: {},
-    };
-  },
-  mounted() {
-    this.getChampion(this.$route.params.id);
-  },
-  methods: {
-    getUrl(id) {
-      const url =
-        "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/";
-      const urlEnd = "_0.jpg";
-      return url + id + urlEnd;
-    },
-    async getChampion(id) {
-      try {
-        const response = await axios.get(
-          `http://ddragon.leagueoflegends.com/cdn/12.23.1/data/en_US/champion/${id}.json`
-        );
-        this.championSelected = response.data.data[id];
-        console.log(this.championSelected);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
-};
-</script>
-
 <style scoped>
-.championImage {
+.champion-image {
   width: auto;
   height: auto;
 }
-.allSpells {
+.all-spells {
   display: flex;
   justify-content: space-between;
+  gap: 50px;
 }
-.eachSpell {
+.each-spell {
   font-weight: bold;
 }
 </style>
